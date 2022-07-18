@@ -23,10 +23,6 @@
   margin-left: auto;
 }
 
-.GeneralInfo__header-actions-button {
-  margin-left: auto !important;
-}
-
 @media screen and (max-width: 1439px) {
   .GeneralInfo__header-title {
     font-size: 3rem;

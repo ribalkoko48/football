@@ -17,3 +17,7 @@ const addNewPlayer = async (player) => {
 export const useAddNewPlayerData = () => {
   return useMutation(addNewPlayer);
 };
+
+export const useFetchFilterList = (name, params = '') => {
+  return useQuery(name, () => axios.get(`http://localhost:3001/${name}?${params}`)) // <- query-string
+};
