@@ -29,9 +29,12 @@ const PLAYERS_DATA = {
 
 const MainPage = () => {
   const [theme, setTheme] = useState("light");
+
   const setContentClassName = (theme) => {
     return `MainPage__content ${theme}`;
   };
+
+
   return (
     <div className="MainPage">
       <div className="MainPage__header">
@@ -42,7 +45,7 @@ const MainPage = () => {
           <Route
             exact
             path="/"
-            element={<GeneralInfo props={PLAYERS_DATA} />}
+            element={<GeneralInfo dataName={PLAYERS_DATA.dataName} buttonData={PLAYERS_DATA.buttonData} columns={PLAYERS_DATA.columns} />}
           />
           <Route
             exact

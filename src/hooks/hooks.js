@@ -20,7 +20,7 @@ export const useFetchTeams = (league = 0) => {
   return res;
 };
 
-export const useFetchPlayers = (league, club, position, page = 1) => {
+export const useFetchPlayers = (league, club, position) => {
   let params = "";
   let param_league = "";
   let param_club = "";

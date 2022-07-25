@@ -15,13 +15,12 @@ const FilterComponent = ({
   handleReset,
   columns,
   preSelectedColumns,
-  dataName,
 }) => {
   let preSelectedColumnsID = columns.map(
     (preSelectedColumn) => preSelectedColumn.id
   );
 
-  console.log("Filters: ", preSelectedColumns);
+  console.log("preSelectedColumns --------------- : ", preSelectedColumns);
 
   const [selectedColumns, setSelectedColumns] = useState(preSelectedColumnsID);
 
@@ -34,11 +33,6 @@ const FilterComponent = ({
   useEffect(() => {
     handleQueryParamsChange("club", 0);
   }, [league]);
-
-  useEffect(() => {
-    localStorage.setItem(dataName, JSON.stringify(selectedColumns));
-    console.log("localStorage: ", localStorage.getItem(dataName));
-  }, [selectedColumns, dataName]);
 
   const handleLeagueChange = (event) => {
     handleQueryParamsChange("league", event.target.value);
@@ -56,7 +50,12 @@ const FilterComponent = ({
     const {
       target: { value },
     } = event;
-    setSelectedColumns(typeof value === "string" ? value.split(",") : value);
+
+    const selectedColumnsIds = typeof value === "string" ? value.split(",") : value; // массив
+
+    setSelectedColumns(selectedColumnsIds);
+
+    localStorage.setItem('player', JSON.stringify(selectedColumns));
   };
 
   return (
