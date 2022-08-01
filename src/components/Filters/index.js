@@ -29,6 +29,8 @@ const FilterComponent = ({
   const teamsData = useFetchTeams(league);
   const positionsData = useFetchPositionsData();
 
+  const shouldAppear = dataName === "player";
+
   useEffect(() => {
     handleQueryParamsChange("club", 0);
   }, [league]);
@@ -67,20 +69,29 @@ const FilterComponent = ({
           handleValueChange={handleLeagueChange}
         />
         <Divider orientation="vertical" flexItem />
-        <BaseFilter
-          label={"FILTER BY CLUBS"}
-          value={club}
-          data={teamsData}
-          handleValueChange={handleTeamChange}
-        />
-        <Divider orientation="vertical" flexItem />
-        <BaseFilter
-          label={"FILTER BY POSITIONS"}
-          value={position}
-          data={positionsData}
-          handleValueChange={handlePositionChange}
-        />
-        <Divider orientation="vertical" flexItem />
+        {shouldAppear && (
+          <>
+            <BaseFilter
+              label={"FILTER BY CLUBS"}
+              value={club}
+              data={teamsData}
+              handleValueChange={handleTeamChange}
+            />
+            <Divider orientation="vertical" flexItem />
+          </>
+        )}
+        {shouldAppear && (
+          <>
+            <BaseFilter
+              label={"FILTER BY POSITIONS"}
+              value={position}
+              data={positionsData}
+              handleValueChange={handlePositionChange}
+            />
+            <Divider orientation="vertical" flexItem />
+          </>
+        )}
+
         <BaseFilter
           label={"SELECTED COLUMNS"}
           value={JSON.parse(localStorage.getItem(dataName)) || selectedColumns}

@@ -10,15 +10,52 @@ const PLAYERS_DATA = {
     label: "New Player",
     action: () => {},
   },
+  nonRemoveblecolumns: [
+    {
+      id: 1,
+      name: "Name",
+    },
+    {
+      id: 2,
+      name: "Position",
+    },
+  ],
   columns: [
-    { id: 1, name: "Club" },
-    { id: 2, name: "Rating" },
-    { id: 3, name: "Country" },
+    { id: 3, name: "Club" },
+    { id: 4, name: "Rating" },
+    { id: 5, name: "Country" },
+  ],
+};
+
+const TEAMS_DATA = {
+  dataName: "team",
+  buttonData: {
+    label: "New Team",
+    action: () => {},
+  },
+  nonRemoveblecolumns: [
+    {
+      id: 1,
+      name: "Name",
+    },
+    {
+      id: 2,
+      name: "League",
+    },
+  ],
+  columns: [
+    { id: 3, name: "Stadium" },
+    { id: 4, name: "Coach" },
+    { id: 5, name: "Transfers Budget" },
   ],
 };
 
 const MainPage = () => {
   const [theme, setTheme] = useState("light");
+
+  const handleThemeChange = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   useEffect(() => {
     window
@@ -32,7 +69,7 @@ const MainPage = () => {
   return (
     <div className="MainPage">
       <div className="MainPage__header">
-        <Header theme={theme} setTheme={setTheme} />
+        <Header theme={theme} handleThemeChange={handleThemeChange} />
       </div>
       <div className="MainPage__content">
         <Routes>
@@ -43,6 +80,7 @@ const MainPage = () => {
               <GeneralInfo
                 dataName={PLAYERS_DATA.dataName}
                 buttonData={PLAYERS_DATA.buttonData}
+                nonRemoveblecolumns={PLAYERS_DATA.nonRemoveblecolumns}
                 columns={PLAYERS_DATA.columns}
               />
             }
@@ -54,7 +92,20 @@ const MainPage = () => {
               <GeneralInfo
                 dataName={PLAYERS_DATA.dataName}
                 buttonData={PLAYERS_DATA.buttonData}
+                nonRemoveblecolumns={PLAYERS_DATA.nonRemoveblecolumns}
                 columns={PLAYERS_DATA.columns}
+              />
+            }
+          />
+          <Route
+            exact
+            path="/teams"
+            element={
+              <GeneralInfo
+                dataName={TEAMS_DATA.dataName}
+                buttonData={TEAMS_DATA.buttonData}
+                nonRemoveblecolumns={TEAMS_DATA.nonRemoveblecolumns}
+                columns={TEAMS_DATA.columns}
               />
             }
           />

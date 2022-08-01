@@ -44,14 +44,22 @@ const LOADING__TABLE = () => {
   );
 };
 
-const CustomTable = ({ queryParams, columns, preSelectedColumns }) => {
+const CustomTable = ({
+  queryParams,
+  columns,
+  nonRemoveblecolumns,
+  preSelectedColumns,
+  dataName,
+}) => {
   const { league, club, position } = queryParams;
-
   const { data, isLoading, fetchNextPage, hasNextPage } = useFetchPlayers(
+    dataName,
     league,
     club,
     position
   );
+
+  console.log(data);
 
   useEffect(() => {
     const onScroll = async (event) => {
@@ -67,6 +75,7 @@ const CustomTable = ({ queryParams, columns, preSelectedColumns }) => {
     return () => {
       document.removeEventListener("scroll", onScroll);
     };
+    // eslint-disable-next-line
   }, []);
 
   let tempValues = columns.filter((column) =>
@@ -76,10 +85,15 @@ const CustomTable = ({ queryParams, columns, preSelectedColumns }) => {
   if (tempValues && !tempValues.length) {
     tempValues = columns;
   }
+  let columnsValues = [];
 
-  let columnsValues = ["Name", "Position"];
+  nonRemoveblecolumns.map((nonRemoveblecolumn) =>
+    columnsValues.push(nonRemoveblecolumn.name)
+  );
 
   tempValues.map((column) => columnsValues.push(column.name));
+
+  console.log(columnsValues.includes("League"));
 
   return (
     <div className="Table">
@@ -109,14 +123,16 @@ const CustomTable = ({ queryParams, columns, preSelectedColumns }) => {
                         {item.name} {item.surname}
                       </Link>
                     </TableCell>
-                    <TableCell>
-                      <Link
-                        className="TableCell__link"
-                        to={`/players?position_id=${item.position_id}`}
-                      >
-                        {item.position}
-                      </Link>
-                    </TableCell>
+                    {columnsValues.includes("Position") && (
+                      <TableCell>
+                        <Link
+                          className="TableCell__link"
+                          to={`/players?position_id=${item.position_id}`}
+                        >
+                          {item.position}
+                        </Link>
+                      </TableCell>
+                    )}
                     {columnsValues.includes("Club") && (
                       <TableCell>
                         <Link
@@ -132,6 +148,25 @@ const CustomTable = ({ queryParams, columns, preSelectedColumns }) => {
                     )}
                     {columnsValues.includes("Country") && (
                       <TableCell>{item.country}</TableCell>
+                    )}
+                    {columnsValues.includes("League") && (
+                      <TableCell>
+                        <Link
+                          className="TableCell__link"
+                          to={`/teams/${item.league}`}
+                        >
+                          {item.league}
+                        </Link>
+                      </TableCell>
+                    )}
+                    {columnsValues.includes("Stadium") && (
+                      <TableCell>{item.stadium}</TableCell>
+                    )}
+                    {columnsValues.includes("Coach") && (
+                      <TableCell>{item.coach}</TableCell>
+                    )}
+                    {columnsValues.includes("Transfers Budget") && (
+                      <TableCell>{item.transfer_budget}</TableCell>
                     )}
                   </TableRow>
                 ))}

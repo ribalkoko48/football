@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import React, { useState, useLayoutEffect, useCallback } from "react";
+import React, { useState } from "react";
 import Switch from "@mui/material/Switch";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
@@ -56,31 +56,9 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const Header = ({ theme = "dark", setTheme }) => {
+const Header = ({ theme = "dark", handleThemeChange }) => {
   const location = useLocation();
-  const [node, setNode] = useState(null);
-  const [height, setHeight] = useState(0);
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
-
-  const measuredRef = useCallback((node) => {
-    if (node !== null) {
-      setNode(node);
-    }
-  }, []);
-
-  useLayoutEffect(() => {
-    if (node) {
-      const measure = () => {
-        setHeight(node.getBoundingClientRect().height);
-      };
-
-      window.addEventListener("resize", measure);
-
-      return () => {
-        window.removeEventListener("resize", measure);
-      };
-    }
-  }, [node, height]);
 
   const getLinkClassName = (path) => {
     const linkState = location.pathname === path ? "active" : "";
@@ -102,7 +80,7 @@ const Header = ({ theme = "dark", setTheme }) => {
   };
 
   return (
-    <div className="Header" ref={measuredRef}>
+    <div className="Header">
       <div className="Header__content">
         <div className="Header__content-logo">
           <Link className="Header__content-logo-link Custom__link" to="/">
@@ -118,7 +96,10 @@ const Header = ({ theme = "dark", setTheme }) => {
           </Link>
         </div>
         <div className="Header__content-right">
-          <MaterialUISwitch />
+          <MaterialUISwitch
+            onChange={handleThemeChange}
+            checked={theme === "dark"}
+          />
           <Divider orientation="vertical" flexItem />
           <Link className="Header__content-right-link Custom__link" to="/login">
             LOGIN <LoginIcon />
@@ -134,7 +115,7 @@ const Header = ({ theme = "dark", setTheme }) => {
               TEAMS
             </Link>
             <div className="Header__sideMenu-content-switch">
-              <MaterialUISwitch />
+              <MaterialUISwitch onChange={handleThemeChange} />
             </div>
             <Divider orientation="vertical" flexItem />
             <Link

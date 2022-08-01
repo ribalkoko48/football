@@ -10,7 +10,12 @@ const DEFAULT_QUERY_PARAMS = {
   position: 0,
 };
 
-const GeneralInfo = ({ dataName, buttonData, columns }) => {
+const GeneralInfo = ({
+  dataName,
+  buttonData,
+  nonRemoveblecolumns,
+  columns,
+}) => {
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_PARAMS);
   const [preSelectedColumns, setPreSelectedColumns] = useState(columns);
 
@@ -58,7 +63,9 @@ const GeneralInfo = ({ dataName, buttonData, columns }) => {
           queryParams={queryParams}
           columns={columns}
           handleQueryParamsChange={handleQueryParamsChange}
+          nonRemoveblecolumns={nonRemoveblecolumns}
           preSelectedColumns={preSelectedColumns}
+          dataName={dataName}
         />
       </div>
     </div>

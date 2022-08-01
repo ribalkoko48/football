@@ -6,6 +6,7 @@ const fetcher = async (data) => {
   return await axios.get(`http://localhost:3001/${data}`);
 };
 
+//For filter
 export const useFetchTeams = (league = 0) => {
   let params = "";
 
@@ -13,6 +14,7 @@ export const useFetchTeams = (league = 0) => {
     params = `?league_id_like=${league}`;
   }
 
+  // const res = useQuery(["teams", league], () => {
   const res = useQuery(["teams", league], () => {
     return axios.get(`http://localhost:3001/teams${params}`);
   });
@@ -20,7 +22,7 @@ export const useFetchTeams = (league = 0) => {
   return res;
 };
 
-export const useFetchPlayers = (league, club, position, page = 1) => {
+export const useFetchPlayers = (dataName, league, club, position) => {
   let params = "";
   let param_league = "";
   let param_club = "";
@@ -29,7 +31,7 @@ export const useFetchPlayers = (league, club, position, page = 1) => {
   let position_ids = [];
 
   if (league > 0) {
-    param_league = `league_id_like=${league}`;
+    param_league = `league_id=${league}`;
   }
 
   const clubs = useQuery(["teams", param_league], () => {
@@ -48,7 +50,13 @@ export const useFetchPlayers = (league, club, position, page = 1) => {
     position_ids.push(position.id);
   });
 
-  const param_clubs_id = queryString.stringify({ club_id: club_ids });
+  // const param_clubs_id = queryString.stringify({ club_id: club_ids });
+  let param_clubs_id = "";
+  if (dataName === "player") {
+    param_clubs_id = queryString.stringify({ club_id: club_ids });
+  } else {
+    param_clubs_id = queryString.stringify({ id: club_ids });
+  }
   param_club += param_clubs_id;
 
   if (club) {
@@ -56,25 +64,33 @@ export const useFetchPlayers = (league, club, position, page = 1) => {
   }
 
   const param_positions_id = queryString.stringify({
-    position_id: position_ids,
+    "&position_id": position_ids,
   });
   param_position += param_positions_id;
 
   if (position) {
-    param_position = `position_id=${position}`;
+    // param_position = `position_id=${position}`;
+    param_position = `&position_id=${position}`;
+  }
+  if (dataName === "team") {
+    param_position = "";
   }
 
-  params = `${param_club}&${param_position}`;
+  // params = `${param_club}&${param_position}`;
+  params = `${param_club}${param_position}`;
+
+  console.log("params: ", params);
 
   const res = useInfiniteQuery(
-    ["players", param_club, param_position],
+    // ["players", param_club, param_position],
+    [dataName, param_club, param_position],
     ({ pageParam = 1 }) => {
       return axios.get(
-        `http://localhost:3001/players?${params}&_limit=5&_page=${pageParam}`
+        `http://localhost:3001/${dataName}s?${params}&_limit=5&_page=${pageParam}`
       );
     },
     {
-      getNextPageParam: (lastPage, allPages) => {
+      getNextPageParam: (_, allPages) => {
         const maxPages = 3;
         const nextPage = allPages.length + 1;
 
