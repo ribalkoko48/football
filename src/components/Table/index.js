@@ -59,8 +59,6 @@ const CustomTable = ({
     position
   );
 
-  console.log(data);
-
   useEffect(() => {
     const onScroll = async (event) => {
       const { scrollHeight, scrollTop, clientHeight } =
@@ -93,8 +91,6 @@ const CustomTable = ({
 
   tempValues.map((column) => columnsValues.push(column.name));
 
-  console.log(columnsValues.includes("League"));
-
   return (
     <div className="Table">
       {isLoading && <LOADING__TABLE />}
@@ -118,9 +114,9 @@ const CustomTable = ({
                     <TableCell>
                       <Link
                         className="TableCell__link"
-                        to={`/players/${item.id}`}
+                        to={`/${dataName}s/${item.id}`}
                       >
-                        {item.name} {item.surname}
+                        {item.name && item.name} {item.surname && item.surname}
                       </Link>
                     </TableCell>
                     {columnsValues.includes("Position") && (
@@ -153,7 +149,7 @@ const CustomTable = ({
                       <TableCell>
                         <Link
                           className="TableCell__link"
-                          to={`/teams/${item.league}`}
+                          to={`/teams?league_id=${item.league_id}`}
                         >
                           {item.league}
                         </Link>

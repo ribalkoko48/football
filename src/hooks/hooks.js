@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useInfiniteQuery, useMutation, useQuery } from "react-query";
 import queryString from "query-string";
+import { useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 const fetcher = async (data) => {
   return await axios.get(`http://localhost:3001/${data}`);
@@ -64,7 +66,7 @@ export const useFetchPlayers = (dataName, league, club, position) => {
   }
 
   const param_positions_id = queryString.stringify({
-    "&position_id": position_ids,
+    position_id: position_ids,
   });
   param_position += param_positions_id;
 
@@ -77,9 +79,7 @@ export const useFetchPlayers = (dataName, league, club, position) => {
   }
 
   // params = `${param_club}&${param_position}`;
-  params = `${param_club}${param_position}`;
-
-  console.log("params: ", params);
+  params = param_club + `&${param_position}`;
 
   const res = useInfiniteQuery(
     // ["players", param_club, param_position],
@@ -117,4 +117,12 @@ export const useFetchLeaguesData = () => {
 
 export const useFetchPositionsData = () => {
   return useQuery("positions", () => fetcher("positions"));
+};
+
+// A custom hook that builds on useLocation to parse
+// the query string for you.
+export const useLocationQuery = () => {
+  const { search } = useLocation();
+
+  return useMemo(() => new URLSearchParams(search), [search]);
 };

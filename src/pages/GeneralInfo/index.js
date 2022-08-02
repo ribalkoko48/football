@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import CustomTable from "../../components/Table";
 import SearchBar from "../../components/SearchBar";
 import FilterComponent from "../../components/Filters";
+import { useLocationQuery } from "../../hooks/hooks";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
 
 const DEFAULT_QUERY_PARAMS = {
@@ -18,6 +20,8 @@ const GeneralInfo = ({
 }) => {
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_PARAMS);
   const [preSelectedColumns, setPreSelectedColumns] = useState(columns);
+  const currentURL = useLocationQuery();
+  const navigate = useNavigate();
 
   const handleQueryParamsChange = (queryParamName, queryParamValue) => {
     setQueryParams({ ...queryParams, [queryParamName]: queryParamValue });
@@ -25,6 +29,7 @@ const GeneralInfo = ({
 
   const handleReset = () => {
     setQueryParams(DEFAULT_QUERY_PARAMS);
+    navigate(currentURL);
   };
 
   useEffect(() => {
@@ -32,6 +37,17 @@ const GeneralInfo = ({
       setPreSelectedColumns(JSON.parse(localStorage.getItem(dataName)));
     }
   }, [dataName]);
+
+  useEffect(() => {
+    setQueryParams(DEFAULT_QUERY_PARAMS);
+    if (currentURL.get("position_id")) {
+      handleQueryParamsChange("position", currentURL.get("position_id"));
+    }
+    if (currentURL.get("league_id")) {
+      handleQueryParamsChange("league", currentURL.get("league_id"));
+    }
+    // eslint-disable-next-line
+  }, [currentURL]);
 
   return (
     <div className="GeneralInfo">
